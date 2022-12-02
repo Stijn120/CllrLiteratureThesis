@@ -1,28 +1,25 @@
-import math
 import lir
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import log_loss
 import numpy as np
-import seaborn as sns
-import torch
-import matplotlib.pyplot as plt
-from sklearn.metrics import log_loss
-from sklearn.isotonic import IsotonicRegression
 
 # Read Data into Dataframe
-df = pd.read_excel('pnas.2119944119.sd02.xlsx')
+df = pd.read_excel('pnas.2119944119.sd02.xlsx')[['Mating', 'Conclusion', 'Outcome']]
 
-# For each QKset, calculate probabilities of each conclusion
-dummies = pd.get_dummies(df['Conclusion'])
-dummies['QKset'] = df['QKset']
-qkset_probs = dummies.groupby('QKset').mean()
+# Get conclusions for all QKsets belonging to each hypothesis
+h1s = df[df['Mating'] == 'M']['Conclusion']
+h2s = df[df['Mating'] == 'N']['Conclusion']
 
-# Transform probabilities into LRs
-x = qkset_probs.drop(['NoConc', 'ProbNot', 'ProbWritten'], axis=1).values
-x = np.array([x[1]/x[0] for x in x])
-y = df.groupby('QKset')['Mating'].first().replace(['M', 'N'], [1, 0]).values
+# Calculate LRs for every conclusion category (i.e. how more likely is it that a category is concluded when h1 is true as opposed to when h2 is true)
+LR_map = {kw: (h1s == kw).sum() / (h2s == kw).sum() for kw in df['Conclusion'].unique()}
+print(LR_map)
+
+# For every QKset, now replace discrete conclusion with continuous LR
+h1s = np.array(h1s.map(LR_map))
+h2s = np.array(h2s.map(LR_map))
+
+# Calculate
+stats = lir.calculate_lr_statistics(h2s, h1s)
 
 # Calculate and print Cllr and Cllrmin
-print('The log likelihood ratio cost is', lir.metrics.cllr(x, y), '(lower is better)')
-print('The discriminative power is', lir.metrics.cllr_min(x, y), '(lower is better)')
+print('The log likelihood ratio cost is', stats.cllr, '(lower is better)')
+print('The discriminative power is', stats.cllr_min, '(lower is better)')
