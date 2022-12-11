@@ -9,6 +9,7 @@ from matplotlib.cbook import boxplot_stats
 
 # Sent font globally
 plt.rcParams.update({'font.family':'Times new Roman'})
+plt.rcParams.update({'mathtext.default':  'regular' })
 
 # Create year x-axis
 years = [int(x) for x in np.linspace(2006, 2022, 17)]
@@ -62,33 +63,33 @@ cllr_reported['Country'] = df_unique_titles['Country']
 # Barplot Proportion (Choose own categorical variable)
 
 # Per Area
-CAT_VARIABLE = 'Forensic Area'
-ORDER_BY = df_unique_titles_as.replace(['Yes', 'No'], [1, 0]).groupby(CAT_VARIABLE).count().sort_values('Cllr Reported', ascending=False).index     # Order by bar heights
-plt.figure(figsize=(10, 7))
-sns.set_color_codes('muted')
-ax1 = sns.barplot(df_unique_titles_as.groupby(CAT_VARIABLE).count(),
-            x=df_unique_titles_as.groupby(CAT_VARIABLE).count().index,
-            y='Authors',
-            color='white',
-            edgecolor="lightblue", hatch=r"/",
-            label='All',
-            order=ORDER_BY)
-ax2 = sns.barplot(df_unique_titles_as[df_unique_titles_as['Cllr Reported'] == 'Yes'].groupby(CAT_VARIABLE).count(),
-            x=df_unique_titles_as[df_unique_titles_as['Cllr Reported'] == 'Yes'].groupby(CAT_VARIABLE).count().index,
-            y='Authors',
-            color="b",
-            label='Proportion Reporting Cllr',
-            order=ORDER_BY)
-proportions = [str(x) + '%' for x in (cllr_reported.groupby(CAT_VARIABLE).mean().reindex(ORDER_BY) * 100).round(1)["Yes"]]
-ax1.bar_label(ax1.containers[0], labels=proportions, fontsize=12)
-sns.despine(left=True, bottom=True)
-plt.legend(loc='upper right')
-plt.title('Number of Publications on (semi-)Automated LR Systems per Forensic Area', fontsize=15)
-plt.xlabel("Forensic Area", fontsize=12)
-plt.xticks(fontsize=12, rotation=90)
-plt.ylabel('Number of Publications', fontsize=12)
-plt.tight_layout()
-plt.show()
+# CAT_VARIABLE = 'Forensic Area'
+# ORDER_BY = df_unique_titles_as.replace(['Yes', 'No'], [1, 0]).groupby(CAT_VARIABLE).count().sort_values('Cllr Reported', ascending=False).index     # Order by bar heights
+# plt.figure(figsize=(10, 7))
+# sns.set_color_codes('muted')
+# ax1 = sns.barplot(df_unique_titles_as.groupby(CAT_VARIABLE).count(),
+#             x=df_unique_titles_as.groupby(CAT_VARIABLE).count().index,
+#             y='Authors',
+#             color='white',
+#             edgecolor="lightblue", hatch=r"/",
+#             label='All',
+#             order=ORDER_BY)
+# ax2 = sns.barplot(df_unique_titles_as[df_unique_titles_as['Cllr Reported'] == 'Yes'].groupby(CAT_VARIABLE).count(),
+#             x=df_unique_titles_as[df_unique_titles_as['Cllr Reported'] == 'Yes'].groupby(CAT_VARIABLE).count().index,
+#             y='Authors',
+#             color="b",
+#             label='Proportion Reporting $C_{llr}$',
+#             order=ORDER_BY)
+# proportions = [str(x) + '%' for x in (cllr_reported.groupby(CAT_VARIABLE).mean().reindex(ORDER_BY) * 100).round(1)["Yes"]]
+# ax1.bar_label(ax1.containers[0], labels=proportions, fontsize=12)
+# sns.despine(left=True, bottom=True)
+# plt.legend(loc='upper right')
+# plt.title('Number of Publications on (semi-)Automated LR Systems per Forensic Area', fontsize=15)
+# plt.xlabel("Forensic Area", fontsize=12)
+# plt.xticks(fontsize=12, rotation=90)
+# plt.ylabel('Number of Publications', fontsize=12)
+# plt.tight_layout()
+# plt.show()
 
 # Per Year
 # CAT_VARIABLE = 'Year'
@@ -106,7 +107,7 @@ plt.show()
 #             x=df_unique_titles_as[df_unique_titles_as['Cllr Reported'] == 'Yes'].groupby(CAT_VARIABLE).count().index,
 #             y='Authors',
 #             color="b",
-#             label='Proportion Reporting Cllr',
+#             label='Proportion Reporting $C_{llr}$',
 #             order=ORDER_BY)
 # proportions = [str(x) + '%' for x in (cllr_reported.groupby(CAT_VARIABLE).mean().reindex(ORDER_BY) * 100).round(1)["Yes"]]
 # ax1.bar_label(ax1.containers[0], labels=proportions, fontsize=12)
@@ -138,7 +139,7 @@ plt.show()
 #             x=df_unique_titles_as_no_dna[df_unique_titles_as_no_dna['Cllr Reported'] == 'Yes'].groupby(CAT_VARIABLE).count().index,
 #             y='Authors',
 #             color="b",
-#             label='Proportion Reporting Cllr',
+#             label='Proportion Reporting $C_{llr}$',
 #             order=ORDER_BY)
 # proportions = [str(x) + '%' for x in (cllr_reported_no_dna.groupby(CAT_VARIABLE).mean().reindex(ORDER_BY) * 100).round(1)["Yes"]]
 # ax1.bar_label(ax1.containers[0], labels=proportions, fontsize=12)
@@ -247,20 +248,20 @@ plt.show()
 # plt.show()
 
 # Stripplot of Cllrs per forensic expertise area
-# df_relevant_cllrs = df_as[df_as["Taken into account for Range"] == "True"].groupby('Dataset').min()
+# df_relevant_cllrs = df[df["Taken into account for Range"] == "True"].groupby('Dataset').min()
 # plt.figure(figsize=(15, 10))
 # sns.set_color_codes('muted')
 # label_counts = df_relevant_cllrs.dropna(subset=['Cllr']).groupby('Forensic Area').count().sort_values('Cllr', ascending=False)['Cllr']
 # cllr_count_order = label_counts.index
 # ax = sns.stripplot(df_relevant_cllrs.dropna(subset=['Cllr']), x='Forensic Area', y='Cllr', order=cllr_count_order, color='#597DBF', s=8, zorder=1)
 # sns.despine(left=True, bottom=True)
-# plt.title('Cllrs per Forensic Area', fontsize=25)
+# plt.title('$C_{llrs}$ per Forensic Area', fontsize=25)
 # plt.xticks(fontsize=17, rotation=90)
 # ax.set_xticklabels(labels=[f"{y} ({str(x)})" for x,y in zip(label_counts, label_counts.index)])
 # plt.yticks(fontsize=20)
 # plt.ylim(0, 1.5)
 # plt.xlabel('Forensic Area', fontsize=20)
-# plt.ylabel('Cllr', fontsize=20)
+# plt.ylabel('$C_{llr}$', fontsize=20)
 # # ax.grid(axis='y')
 # for (x, area) in zip(ax.get_xticks(), cllr_count_order):
 #     cllrs = df_relevant_cllrs[df_relevant_cllrs['Forensic Area'] == area].dropna(subset=['Cllr'])['Cllr'].values
@@ -269,15 +270,16 @@ plt.show()
 #         if ci[0] < 0:
 #             ci = (0, ci[1])
 #         print(f"95% confidence interval {area}: {ci}")
-#         plt.plot((x, x), ci, 'ro-', linewidth=5, markersize=10, label='95% Confidence Interval' if x==0 else "", zorder=2)
+#         plt.plot((x, x), ci, 'o-', linewidth=3, markersize=8, c='black', label='95% Confidence Interval' if x==0 else "", zorder=2)
 # plt.legend(fontsize=20)
 # plt.tight_layout()
 # plt.show()
 
 # Plot boxplot of Cllrs in expertise area
 # plt.figure(figsize=(10, 8))
-# FORENSIC_AREA = 'Text and Document Analysis'
-# area_df = df_as[(df_as['Forensic Area'] == FORENSIC_AREA) & (df_as['Taken into account for Range'] == "True")].groupby('Dataset').min()
+# FORENSIC_AREA = 'Forensic Biometrics'
+# area_df = df[(df['Forensic Area'] == FORENSIC_AREA) & (df['Taken into account for Range'] == "True")].groupby('Dataset').min()
+# print(area_df['Forensic Analysis'])
 # sns.set_color_codes('muted')
 # label_counts = area_df.dropna(subset=['Cllr']).groupby('Forensic Analysis').count().sort_values('Cllr', ascending=False)['Cllr']
 # ax = sns.stripplot(area_df.dropna(subset=['Cllr']), x='Forensic Analysis', y='Cllr', order=label_counts.index, color='#597DBF', s=8, zorder=1)
@@ -292,53 +294,53 @@ plt.show()
 #         if ci[0] < 0:
 #             ci = (0, ci[1])
 #         print(f"95% confidence interval {analysis}: {ci}")
-#         plt.plot((x, x), ci, 'ro-', linewidth=5, markersize=10, label='95% Confidence Interval' if x==0 else "", zorder=0)
+#         plt.plot((x, x), ci, 'o-', linewidth=3, markersize=8, c='black', label='95% Confidence Interval' if x==0 else "", zorder=0)
 # ax.grid(axis='y')
 # plt.legend(fontsize=15)
 # plt.xticks(fontsize=15, rotation=0)
 # plt.xlabel('Forensic Analysis', fontsize=16)
-# plt.title('Reported Cllrs per Analysis', fontsize=20)
-# plt.ylabel("Cllr", fontsize=16)
+# plt.title('$C_{llrs}$ per Analysis', fontsize=20)
+# plt.ylabel("$C_{llr}$", fontsize=16)
 # ax.tick_params(axis='both', which='major', labelsize=15)
 # plt.tight_layout()
 # plt.show()
 
 # Difference in Cllr between "academic toy datasets" and "forensically realistic datasets"
-# fig, ax = plt.subplots(1,1,figsize=(10, 8))
-#
-# # Fix markers
-# a = ax.scatter([1,2],[3,4], marker='o')
-# b = ax.scatter([1,2],[3,4], marker='s')
-# c = ax.scatter([1,2],[3,4], marker='^')
-# mk_1, = a.get_paths()
-# mk_2, = b.get_paths()
-# mk_3, = c.get_paths()
-# a.remove()
-# b.remove()
-# c.remove()
-#
-# excluded_cllr_areas = df_as[(df_as['Taken into account for Range'] != "True") & (df_as["Cllr Reported"] == "Yes")].groupby("Forensic Area").count().index.values
-# df_excluded_cllr_categories = df_as[df_as['Forensic Area'].isin(excluded_cllr_areas)]
-# df_excluded_cllr_categories = df_excluded_cllr_categories.replace({'True':'Forensically relevant dataset', 'False - Too small sample for proper validation':'Too small sample for proper validation', 'False - No forensically relevant dataset':'No forensically relevant dataset'})
-# print("Proportion of Cllrs reported on forensically relevant data:", len(df_as[df_as['Taken into account for Range'] == "True"].dropna(subset=['Cllr']))/len(df_as.dropna(subset=['Cllr'])))
-# ax = sns.swarmplot(df_excluded_cllr_categories.dropna(subset=['Cllr']), ax=ax, hue='Taken into account for Range', y='Cllr', x='Forensic Area', dodge=True, s=7)
-# N_hues = len(pd.unique(df_excluded_cllr_categories['Taken into account for Range'].dropna()))
-# c = ax.collections
-# for a in c[::N_hues]:
-#     a.set_paths([mk_1])
-# for a in c[1::N_hues]:
-#     a.set_paths([mk_2])
-# for a in c[2::N_hues]:
-#     a.set_paths([mk_3])
-# ax.legend(c[-3:],pd.unique(df_excluded_cllr_categories['Taken into account for Range'].dropna()), fontsize=15)
-# plt.xticks(fontsize=14)
-# plt.yticks(fontsize=12)
-# sns.despine(left=True, bottom=True)
-# plt.xlabel("Forensic Area", fontsize=15)
-# plt.ylabel("Cllr", fontsize=15)
-# plt.title("Cllr values per Forensic Area for different types of Datasets", fontsize=20)
-# plt.tight_layout()
-# plt.show()
+fig, ax = plt.subplots(1,1,figsize=(10, 8))
+
+# Fix markers
+a = ax.scatter([1,2],[3,4], marker='o')
+b = ax.scatter([1,2],[3,4], marker='s')
+c = ax.scatter([1,2],[3,4], marker='^')
+mk_1, = a.get_paths()
+mk_2, = b.get_paths()
+mk_3, = c.get_paths()
+a.remove()
+b.remove()
+c.remove()
+
+excluded_cllr_areas = df_as[(df_as['Taken into account for Range'] != "True") & (df_as["Cllr Reported"] == "Yes")].groupby("Forensic Area").count().index.values
+df_excluded_cllr_categories = df_as[df_as['Forensic Area'].isin(excluded_cllr_areas)]
+df_excluded_cllr_categories = df_excluded_cllr_categories.replace({'True':'Forensically relevant dataset', 'False - Too small sample for proper validation':'Too small sample for proper validation', 'False - No forensically relevant dataset':'No forensically relevant dataset'})
+print("Proportion of Cllrs reported on forensically relevant data:", len(df_as[df_as['Taken into account for Range'] == "True"].dropna(subset=['Cllr']))/len(df_as.dropna(subset=['Cllr'])))
+ax = sns.swarmplot(df_excluded_cllr_categories.dropna(subset=['Cllr']), ax=ax, hue='Taken into account for Range', y='Cllr', x='Forensic Area', dodge=True, s=7)
+N_hues = len(pd.unique(df_excluded_cllr_categories['Taken into account for Range'].dropna()))
+c = ax.collections
+for a in c[::N_hues]:
+    a.set_paths([mk_1])
+for a in c[1::N_hues]:
+    a.set_paths([mk_2])
+for a in c[2::N_hues]:
+    a.set_paths([mk_3])
+ax.legend(c[-3:],pd.unique(df_excluded_cllr_categories['Taken into account for Range'].dropna()), fontsize=15)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=12)
+sns.despine(left=True, bottom=True)
+plt.xlabel("Forensic Area", fontsize=15)
+plt.ylabel("$C_{llr}$", fontsize=15)
+plt.title("$C_{llrs}$ per Forensic Area for different types of Datasets", fontsize=20)
+plt.tight_layout()
+plt.show()
 
 # Barplot Proportion within forensic area (Choose own categorical variable)
 # CAT_VARIABLE = 'Forensic Analysis'
